@@ -17,7 +17,6 @@ namespace BorrowingService.Features.Borrows.Commands.Create
 		private readonly InventoryClient.InventoryClient inventoryClient;
 		private readonly UserManager.UserManagerClient userManagerClient;
 		private readonly CatalogClient.CatalogClient catalogClient;
-		private readonly CreateBorrowCommandValidator validator;
 
 		public CreateBorrowHandler(BorrowContext context, CatalogClient.CatalogClient catalogClient,
 			InventoryClient.InventoryClient inventoryClient, UserManager.UserManagerClient userManagerClient)
@@ -26,11 +25,11 @@ namespace BorrowingService.Features.Borrows.Commands.Create
 			this.inventoryClient = inventoryClient;
 			this.userManagerClient = userManagerClient;
 			this.catalogClient = catalogClient;
-			this.validator = new CreateBorrowCommandValidator(catalogClient, inventoryClient, userManagerClient);
 
 		}
 		public async Task<Borrow> Handle(CreateBorrowCommand request, CancellationToken cancellationToken)
 		{
+			var validator = new CreateBorrowCommandValidator(catalogClient, inventoryClient, userManagerClient);
 			FluentValidation.Results.ValidationResult result = await validator.ValidateAsync(request);
 
 			if (!result.IsValid)

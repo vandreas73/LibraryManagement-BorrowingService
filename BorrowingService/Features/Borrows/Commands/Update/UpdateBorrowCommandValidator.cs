@@ -1,19 +1,16 @@
-﻿using BorrowingService.CatalogClient;
-using BorrowingService.InventoryClient;
-using BorrowingService.Models;
-using BorrowingService.UserService;
+﻿using BorrowingService.UserService;
 using FluentValidation;
 using static BorrowingService.UserService.UserManager;
 
-namespace BorrowingService.Features.Borrows.Commands.Create
+namespace BorrowingService.Features.Borrows.Commands.Update
 {
-	public class CreateBorrowCommandValidator : AbstractValidator<CreateBorrowCommand>
+	public class UpdateBorrowCommandValidator : AbstractValidator<UpdateBorrowCommand>
 	{
 		private readonly CatalogClient.CatalogClient catalogClient;
 		private readonly InventoryClient.InventoryClient inventoryClient;
 		private readonly UserManagerClient userManagerClient;
 
-		public CreateBorrowCommandValidator(CatalogClient.CatalogClient catalogClient,
+		public UpdateBorrowCommandValidator(CatalogClient.CatalogClient catalogClient,
 			InventoryClient.InventoryClient inventoryClient, UserManagerClient userManagerClient)
 		{
 			this.catalogClient = catalogClient;
