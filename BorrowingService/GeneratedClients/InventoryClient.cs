@@ -956,18 +956,18 @@ namespace BorrowingService.InventoryClient
 
 		/// <returns>OK</returns>
 		/// <exception cref="ApiException">A server side error occurred.</exception>
-		public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BookDTO>> BooksAsync(int id)
+		public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LibraryBookFilledDTO>> BooksOfLibraryAsync(int libraryId)
 		{
-			return BooksAsync(id, System.Threading.CancellationToken.None);
+			return BooksOfLibraryAsync(libraryId, System.Threading.CancellationToken.None);
 		}
 
 		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
 		/// <returns>OK</returns>
 		/// <exception cref="ApiException">A server side error occurred.</exception>
-		public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<BookDTO>> BooksAsync(int id, System.Threading.CancellationToken cancellationToken)
+		public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LibraryBookFilledDTO>> BooksOfLibraryAsync(int libraryId, System.Threading.CancellationToken cancellationToken)
 		{
-			if (id == null)
-				throw new System.ArgumentNullException("id");
+			if (libraryId == null)
+				throw new System.ArgumentNullException("libraryId");
 
 			var client_ = _httpClient;
 			var disposeClient_ = false;
@@ -980,10 +980,10 @@ namespace BorrowingService.InventoryClient
 
 					var urlBuilder_ = new System.Text.StringBuilder();
 					if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-					// Operation Path: "api/LibraryBooks/{id}/books"
+					// Operation Path: "api/LibraryBooks/{libraryId}/books-of-library"
 					urlBuilder_.Append("api/LibraryBooks/");
-					urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-					urlBuilder_.Append("/books");
+					urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(libraryId, System.Globalization.CultureInfo.InvariantCulture)));
+					urlBuilder_.Append("/books-of-library");
 
 					PrepareRequest(client_, request_, urlBuilder_);
 
@@ -1010,7 +1010,7 @@ namespace BorrowingService.InventoryClient
 						var status_ = (int)response_.StatusCode;
 						if (status_ == 200)
 						{
-							var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<BookDTO>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+							var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<LibraryBookFilledDTO>>(response_, headers_, cancellationToken).ConfigureAwait(false);
 							if (objectResponse_.Object == null)
 							{
 								throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1039,15 +1039,15 @@ namespace BorrowingService.InventoryClient
 
 		/// <returns>OK</returns>
 		/// <exception cref="ApiException">A server side error occurred.</exception>
-		public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LibraryDTO>> Books2Async(int bookId)
+		public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LibraryBookFilledDTO>> LibrariesHavingBookAsync(int bookId)
 		{
-			return Books2Async(bookId, System.Threading.CancellationToken.None);
+			return LibrariesHavingBookAsync(bookId, System.Threading.CancellationToken.None);
 		}
 
 		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
 		/// <returns>OK</returns>
 		/// <exception cref="ApiException">A server side error occurred.</exception>
-		public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LibraryDTO>> Books2Async(int bookId, System.Threading.CancellationToken cancellationToken)
+		public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<LibraryBookFilledDTO>> LibrariesHavingBookAsync(int bookId, System.Threading.CancellationToken cancellationToken)
 		{
 			if (bookId == null)
 				throw new System.ArgumentNullException("bookId");
@@ -1063,8 +1063,8 @@ namespace BorrowingService.InventoryClient
 
 					var urlBuilder_ = new System.Text.StringBuilder();
 					if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-					// Operation Path: "api/LibraryBooks/books/{bookId}"
-					urlBuilder_.Append("api/LibraryBooks/books/");
+					// Operation Path: "api/LibraryBooks/libraries-having-book/{bookId}"
+					urlBuilder_.Append("api/LibraryBooks/libraries-having-book/");
 					urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(bookId, System.Globalization.CultureInfo.InvariantCulture)));
 
 					PrepareRequest(client_, request_, urlBuilder_);
@@ -1092,7 +1092,94 @@ namespace BorrowingService.InventoryClient
 						var status_ = (int)response_.StatusCode;
 						if (status_ == 200)
 						{
-							var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<LibraryDTO>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+							var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<LibraryBookFilledDTO>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+							if (objectResponse_.Object == null)
+							{
+								throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+							}
+							return objectResponse_.Object;
+						}
+						else
+						{
+							var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+							throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+						}
+					}
+					finally
+					{
+						if (disposeResponse_)
+							response_.Dispose();
+					}
+				}
+			}
+			finally
+			{
+				if (disposeClient_)
+					client_.Dispose();
+			}
+		}
+
+		/// <returns>OK</returns>
+		/// <exception cref="ApiException">A server side error occurred.</exception>
+		public virtual System.Threading.Tasks.Task<LibraryBookDTO> BookAsync(int libraryId, int bookId)
+		{
+			return BookAsync(libraryId, bookId, System.Threading.CancellationToken.None);
+		}
+
+		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <returns>OK</returns>
+		/// <exception cref="ApiException">A server side error occurred.</exception>
+		public virtual async System.Threading.Tasks.Task<LibraryBookDTO> BookAsync(int libraryId, int bookId, System.Threading.CancellationToken cancellationToken)
+		{
+			if (libraryId == null)
+				throw new System.ArgumentNullException("libraryId");
+
+			if (bookId == null)
+				throw new System.ArgumentNullException("bookId");
+
+			var client_ = _httpClient;
+			var disposeClient_ = false;
+			try
+			{
+				using (var request_ = new System.Net.Http.HttpRequestMessage())
+				{
+					request_.Method = new System.Net.Http.HttpMethod("GET");
+					request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+
+					var urlBuilder_ = new System.Text.StringBuilder();
+					if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+					// Operation Path: "api/LibraryBooks/library/{libraryId}/book/{bookId}"
+					urlBuilder_.Append("api/LibraryBooks/library/");
+					urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(libraryId, System.Globalization.CultureInfo.InvariantCulture)));
+					urlBuilder_.Append("/book/");
+					urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(bookId, System.Globalization.CultureInfo.InvariantCulture)));
+
+					PrepareRequest(client_, request_, urlBuilder_);
+
+					var url_ = urlBuilder_.ToString();
+					request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+					PrepareRequest(client_, request_, url_);
+
+					var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+					var disposeResponse_ = true;
+					try
+					{
+						var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+						foreach (var item_ in response_.Headers)
+							headers_[item_.Key] = item_.Value;
+						if (response_.Content != null && response_.Content.Headers != null)
+						{
+							foreach (var item_ in response_.Content.Headers)
+								headers_[item_.Key] = item_.Value;
+						}
+
+						ProcessResponse(client_, response_);
+
+						var status_ = (int)response_.StatusCode;
+						if (status_ == 200)
+						{
+							var objectResponse_ = await ReadObjectResponseAsync<LibraryBookDTO>(response_, headers_, cancellationToken).ConfigureAwait(false);
 							if (objectResponse_.Object == null)
 							{
 								throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1232,41 +1319,6 @@ namespace BorrowingService.InventoryClient
 	}
 
 	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-	public partial class BookDTO
-	{
-		[Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-		public int Id { get; set; }
-
-		[Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-		public string Title { get; set; }
-
-		[Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-		public string Description { get; set; }
-
-		[Newtonsoft.Json.JsonProperty("pages", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-		public int Pages { get; set; }
-
-		[Newtonsoft.Json.JsonProperty("language", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-		public string Language { get; set; }
-
-		[Newtonsoft.Json.JsonProperty("publisher", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-		public string Publisher { get; set; }
-
-		[Newtonsoft.Json.JsonProperty("isbn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-		public string Isbn { get; set; }
-
-		[Newtonsoft.Json.JsonProperty("publishingYear", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-		public int PublishingYear { get; set; }
-
-		[Newtonsoft.Json.JsonProperty("authorId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-		public int AuthorId { get; set; }
-
-		[Newtonsoft.Json.JsonProperty("authorName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-		public string AuthorName { get; set; }
-
-	}
-
-	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
 	public partial class LibraryBookDTO
 	{
 		[Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1277,6 +1329,35 @@ namespace BorrowingService.InventoryClient
 
 		[Newtonsoft.Json.JsonProperty("bookId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
 		public int BookId { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("count", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public int Count { get; set; }
+
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+	public partial class LibraryBookFilledDTO
+	{
+		[Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public int Id { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("libraryId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public int LibraryId { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("libraryName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public string LibraryName { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("libraryAddress", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public string LibraryAddress { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("bookId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public int BookId { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("bookTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public string BookTitle { get; set; }
+
+		[Newtonsoft.Json.JsonProperty("bookAuthor", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+		public string BookAuthor { get; set; }
 
 		[Newtonsoft.Json.JsonProperty("count", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
 		public int Count { get; set; }

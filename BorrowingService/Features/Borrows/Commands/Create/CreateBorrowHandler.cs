@@ -7,6 +7,7 @@ using BorrowingService.UserService;
 using FluentValidation;
 using Grpc.Core;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace BorrowingService.Features.Borrows.Commands.Create
@@ -37,7 +38,12 @@ namespace BorrowingService.Features.Borrows.Commands.Create
 				throw new BadRequestException(result.ToString("~"));
 			}
 
-			//TODO: Check if the book is available
+			var libraryBook = await inventoryClient.BookAsync(request.LibraryId, request.BookId);
+			var borrowedCount = await context.Borrows.Where(b => b.BookId == request.BookId && b.LibraryId == request.LibraryId && b.ReturnedAt == null).CountAsync();
+			if (libraryBook.Count <= borrowedCount)
+			{
+				throw new BadRequestException("Book is not available in the library");
+			}
 
 			var borrow = new Borrow
 			{

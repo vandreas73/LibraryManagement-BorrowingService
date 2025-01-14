@@ -4,6 +4,7 @@ using BorrowingService.Features.Borrows.Commands.Return;
 using BorrowingService.Features.Borrows.Commands.Update;
 using BorrowingService.Features.Borrows.DTOs;
 using BorrowingService.Features.Borrows.Queries.Get;
+using BorrowingService.Features.Borrows.Queries.GetBookFreeCount;
 using BorrowingService.Features.Borrows.Queries.List;
 using BorrowingService.Features.Borrows.Queries.ListByDate;
 using BorrowingService.Features.Borrows.Queries.ListByUser;
@@ -79,6 +80,12 @@ namespace BorrowingService.Controllers
 		{
 			var borrow = await mediator.Send(new ReturnBorrowCommand(id));
 			return Ok(borrow);
+		}
+
+		[HttpPost("free-books")]
+		public async Task<ActionResult<ICollection<BookCountInLibraryDTO>>> GetFreeBooks(GetBookFreeCountQuery query)
+		{
+			return Ok(await mediator.Send(query));
 		}
 	}
 }
