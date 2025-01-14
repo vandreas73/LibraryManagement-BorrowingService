@@ -1,9 +1,11 @@
 ﻿using BorrowingService.Features.Borrows.Commands.Create;
 using BorrowingService.Features.Borrows.Commands.Delete;
+using BorrowingService.Features.Borrows.Commands.Return;
 using BorrowingService.Features.Borrows.Commands.Update;
 using BorrowingService.Features.Borrows.DTOs;
 using BorrowingService.Features.Borrows.Queries.Get;
 using BorrowingService.Features.Borrows.Queries.List;
+using BorrowingService.Features.Borrows.Queries.ListByDate;
 using BorrowingService.Features.Borrows.Queries.ListByUser;
 using BorrowingService.Models;
 using MediatR;
@@ -65,5 +67,18 @@ namespace BorrowingService.Controllers
 			return NoContent();
 		}
 
+		[HttpPost("filter-by-date")]
+		public async Task<ActionResult<ICollection<BorrowUserBookLibraryDTO>>> FilterByDueDate(ListUnreturnedBorrowsByDateQuery query)
+		{
+			var borrows = await mediator.Send(query);
+			return Ok(borrows);
+		}
+
+		[HttpPut("{id}/return")]
+		public async Task<ActionResult<Borrow>> ReturnBorrow(int id)
+		{
+			var borrow = await mediator.Send(new ReturnBorrowCommand(id));
+			return Ok(borrow);
+		}
 	}
 }
