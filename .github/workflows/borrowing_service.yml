@@ -35,5 +35,4 @@ jobs:
         containerAppEnvironment: ${{ env.CONTAINER_APP_ENVIRONMENT_NAME }}
         resourceGroup: ${{ env.RESOURCE_GROUP }}
         environmentVariables: |
-          ASPNETCORE_ENVIRONMENT=Development
-          ConnectionStrings__BorrowContext='${{ secrets.ConnectionStrings__BorrowContext }}'
+          ASPNETCORE_ENVIRONMENT=Development ConnectionStrings__BorrowContext='${{ secrets.ConnectionStrings__BorrowContext }}'
